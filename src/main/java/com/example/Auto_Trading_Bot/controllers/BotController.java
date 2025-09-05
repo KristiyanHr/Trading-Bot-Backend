@@ -31,4 +31,17 @@ public class BotController {
         return ResponseEntity.ok("Account has been reset to its initial state.");
     }
 
+    @PostMapping("/start-live/{symbol}")
+    public ResponseEntity<String> startLiveTrading(@PathVariable String symbol){
+        new Thread(() -> tradingBotService.runLiveSimulation(1L, symbol)).start();
+        return ResponseEntity.ok("Live trading simulation started for symbol: " + symbol);
+    }
+
+    @PostMapping("/stop-live")
+    public ResponseEntity<String> stopLiveTrading(){
+        tradingBotService.stopLiveSimulation();
+        return ResponseEntity.ok("Live simulation stopping ....");
+    }
+
+
 }
