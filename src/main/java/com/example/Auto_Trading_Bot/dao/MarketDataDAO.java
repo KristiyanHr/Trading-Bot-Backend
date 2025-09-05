@@ -18,7 +18,7 @@ public class MarketDataDAO {
     }
 
     public void save(MarketData marketData){
-        String sql = "INSERT INTO market_data (symbol, price, timestamp) VALUES (?,?,?)";
+        String sql = "INSERT IGNORE INTO market_data (symbol, price, timestamp) VALUES (?,?,?)";
         jdbcTemplate.update(sql,marketData.getSymbol(), marketData.getPrice(), Timestamp.valueOf(marketData.getTimestamp()));
     }
 

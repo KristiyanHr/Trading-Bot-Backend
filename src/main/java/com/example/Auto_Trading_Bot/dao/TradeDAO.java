@@ -31,4 +31,9 @@ public class TradeDAO {
                 trade.getPnl()
         );
     }
+
+    public void deleteByAccountId(Long accountId){
+        String sql = "DELETE FROM trades WHERE account_id = ?";
+        jdbcTemplate.update(sql, accountId);
+    }
 }
