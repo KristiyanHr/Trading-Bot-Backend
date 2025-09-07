@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -62,5 +63,10 @@ public class PortfolioDAO {
     public void deleteByAccountId(Long accountId){
         String sql = "DELETE FROM portfolio_holdings WHERE account_id = ?";
         jdbcTemplate.update(sql, accountId);
+    }
+
+    public List<PortfolioHolding> findByAccountId(Long accountId){
+        String sql = "SELECT * FROM portfolio_holdings WHERE account_id = ?";
+        return jdbcTemplate.query(sql, this::mapRowToHolding, accountId);
     }
 }
