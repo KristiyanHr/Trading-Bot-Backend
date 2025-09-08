@@ -12,6 +12,7 @@ public class Trade {
     private String symbol;
     private TradeType tradeType;
     private BigDecimal quantity;
+    private String simulationType;
     private BigDecimal price;
     private LocalDateTime timestamp;
     private BigDecimal pnl;

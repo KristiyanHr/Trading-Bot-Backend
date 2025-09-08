@@ -3,10 +3,7 @@ package com.example.Auto_Trading_Bot.controllers;
 import com.example.Auto_Trading_Bot.dao.AccountDAO;
 import com.example.Auto_Trading_Bot.dao.PortfolioDAO;
 import com.example.Auto_Trading_Bot.dao.TradeDAO;
-import com.example.Auto_Trading_Bot.models.Account;
-import com.example.Auto_Trading_Bot.models.AccountStatus;
-import com.example.Auto_Trading_Bot.models.PortfolioHolding;
-import com.example.Auto_Trading_Bot.models.TickerPrice;
+import com.example.Auto_Trading_Bot.models.*;
 import com.example.Auto_Trading_Bot.services.CryptoAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,5 +60,13 @@ public class AccountController {
         status.setTotalNetWorth(portfolioValue.add(account.getBalance()));
 
         return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/{accountId}/trades")
+    public List<Trade> getTradesByType(
+            @PathVariable Long accountId,
+            @RequestParam(name = "type") String simulationType
+    ) {
+        return tradeDAO.findByAccountIdAndType(accountId, simulationType.toUpperCase());
     }
 }

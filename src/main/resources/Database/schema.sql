@@ -33,7 +33,8 @@ CREATE TABLE trades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     account_id INT NOT NULL,
     symbol VARCHAR(20) NOT NULL,
-    trade_type VARCHAR(10) NOT NULL, -- 'BUY' or 'SELL'
+    trade_type VARCHAR(10) NOT NULL,
+    simulation_type VARCHAR(10) NOT NULL,-- 'BUY' or 'SELL'
     quantity DECIMAL(19, 8) NOT NULL,
     price DECIMAL(19, 8) NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,

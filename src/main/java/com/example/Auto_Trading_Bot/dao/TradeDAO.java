@@ -39,13 +39,14 @@ public class TradeDAO {
     }
 
     public void save(Trade trade){
-        String sql = "INSERT INTO trades (account_id, symbol, trade_type, quantity, price, timestamp, pnl) VALUES (?,?,?,?,?,?,?) ";
+        String sql = "INSERT INTO trades (account_id, symbol, trade_type, simulation_type, quantity, price, timestamp, pnl) VALUES (?,?,?,?,?,?,?,?) ";
 
         jdbcTemplate.update(
                 sql,
                 trade.getAccountId(),
                 trade.getSymbol(),
                 trade.getTradeType().name(),
+                trade.getSimulationType(),
                 trade.getQuantity(),
                 trade.getPrice(),
                 Timestamp.valueOf(trade.getTimestamp()),
@@ -62,5 +63,15 @@ public class TradeDAO {
         String sql = "SELECT * FROM trades WHERE account_id = ? ORDER BY timestamp DESC";
 
         return jdbcTemplate.query(sql, this::mapRowToTrade, accountId);
+    }
+
+    public void deleteByAccountIdAndType(Long accountId, String simulationType) {
+        String sql = "DELETE FROM trades WHERE account_id = ? AND simulation_type = ?";
+        jdbcTemplate.update(sql, accountId, simulationType);
+    }
+
+    public List<Trade> findByAccountIdAndType(Long accountId, String simulationType) {
+        String sql = "SELECT * FROM trades WHERE account_id = ? AND simulation_type = ? ORDER BY timestamp DESC";
+        return jdbcTemplate.query(sql, this::mapRowToTrade, accountId, simulationType);
     }
 }
