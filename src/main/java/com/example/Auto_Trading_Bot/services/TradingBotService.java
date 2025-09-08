@@ -25,8 +25,8 @@ public class TradingBotService {
     private static final int RSI_PERIOD = 14;
 
 
-    private static final int SHORT_SMA_PERIOD = 2;
-    private static final int LONG_SMA_PERIOD = 3;
+    private static final int SHORT_SMA_PERIOD = 10;
+    private static final int LONG_SMA_PERIOD = 25;
 
     @Autowired
     public TradingBotService(AccountDAO accountDAO, MarketDataDAO marketDataDAO, TradeDAO tradeDAO, PortfolioDAO portfolioDAO, CryptoAPIService cryptoAPIService) {
