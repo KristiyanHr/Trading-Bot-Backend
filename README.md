@@ -1,61 +1,88 @@
-#  Automated Crypto Trading Bot
 
-This is a full-stack web application that simulates an automated cryptocurrency trading bot. It is built with a Java Spring Boot backend and a React frontend, providing both the core trading logic and a user-friendly dashboard to control and visualize its performance.
+This project is the backend service for a simulated automated cryptocurrency trading bot. It's a full-stack application with a Java Spring Boot backend and a React frontend. This repository contains the backend code.
 
----
+The backend is responsible for all core business logic, including fetching market data, executing trading strategies, managing account state, and serving data to the frontend via a REST API.
 
-## Overview
+**Frontend Repository:** https://github.com/KristiyanHr/Trading-Bot-Frontend
 
-The project is composed of two distinct parts that work together to simulate real-world trading conditions.
+## Features
 
-###  Backend (Java, Spring Boot, MySQL)
-The backend is the brain of the operation. It handles all market data integration, trading strategy execution, stateful account management, and exposes a comprehensive REST API.
+*   **Dual-Mode Operation:**
+    *   **Training Mode:** Runs the trading strategy against historical market data to perform a backtest.
+    *   **Live Simulation Mode:** Runs the bot against live market prices in a continuous loop to simulate real-time trading.
+*   **Advanced Trading Strategy:** Implements a two-factor trading algorithm combining a trend indicator (Simple Moving Average Crossover) with a momentum indicator (Relative Strength Index - RSI) for more robust signals.
+*   **Stateful Account Management:** Accurately tracks account balance (USD) and crypto portfolio holdings, persisting all changes to a relational database.
+*   **Dynamic Trade Sizing:** Trades are sized as a percentage of the current account balance, a realistic risk management technique.
+*   **Profit/Loss Calculation:** Accurately calculates and records the profit or loss for every completed trade (round trip).
+*   **Multi-Asset Ready:** The system is designed to handle multiple cryptocurrency pairs (e.g., BTCUSDT, ETHUSDT).
+*   **REST API:** A clean and professional API for the frontend to consume, covering bot controls and data retrieval.
+*   **Unit & Integration Tests:** Includes JUnit tests to verify the correctness of business logic and the integrity of the API endpoints.
 
-###  Frontend (React, Vite, Recharts)
-The frontend provides a modern, interactive dashboard to control the bot, monitor performance in real-time, and analyze both trade history and broader market data.
+## Technical Requirements & Stack
 
-### Core Features
-Together, the two parts provide a complete simulation experience:
-    **Dual-Mode Operation: Run the bot in Training Mode (backtesting against historical data) or Trading Mode (simulating trades against live market prices).
-    **Advanced Two-Factor Strategy:  Implements a robust algorithm combining a Simple Moving Average (SMA) Crossover for trend direction with a  Relative Strength Index (RSI) for momentum confirmation.
-    **Stateful Account Management: Accurately tracks account balance and portfolio, using dynamic trade sizing (percentage of capital) for realistic risk management.
-    **Rich Data Visualization: Real-time charting of portfolio performance, detailed trade history tables, and comparative price analysis charts.
+*   **Language/Framework:** Java 17+ with Spring Boot 3
+*   **Data Persistence:**
+    *   **Database:** MySQL
+    *   **Data Access:** Raw SQL queries via Spring's `JdbcTemplate` (as per project requirements, no ORM).
+*   **Build Tool:** Maven
+*   **Testing:** JUnit 5, MockMvc for integration tests.
+
+## Setup & Running the Application
+
+### Prerequisites
+*   Java JDK 17 or newer
+*   Apache Maven
+*   MySQL Server
+
+### 1. Database Setup
+
+1.  **Start your MySQL server.**
+2.  Connect to MySQL using a client (like MySQL Workbench or the command line) and create the user and database by running the following script. (Remember to replace `'your_password'` with a secure password).
+ 
+    DROP USER IF EXISTS 'trading_bot_user'@'localhost';
+    CREATE USER 'trading_bot_user'@'localhost' IDENTIFIED BY 'your_password';
+    DROP DATABASE IF EXISTS trading_bot_db;
+    CREATE DATABASE trading_bot_db;
+    GRANT ALL PRIVILEGES ON trading_bot_db.* TO 'trading_bot_user'@'localhost';
+    FLUSH PRIVILEGES;
 
 
-##  Project Structure
+### 2. Application Configuration
 
-This project is organized as a multi-repository setup, which is standard for modern full-stack applications.
+1.  Open the `src/main/resources/application.properties` file.
+2.  Update the `spring.datasource` properties with your MySQL username and password.
+   
+    spring.datasource.url=jdbc:mysql://localhost:3306/trading_bot_db
+    spring.datasource.username=trading_bot_user
+    spring.datasource.password=your_password
+ 
 
----
+### 3. Running the Backend
 
-root/
+1.  Navigate to the root directory of the `trading-bot-backend` project.
+2.  Run the application using the Maven Spring Boot plugin:
 
-│
-├── trading-bot-backend/   # The Backend service (Spring Boot, MySQL, REST API)
-│
-└── trading-bot-frontend/  # The Frontend dashboard (React + Vite)
+    mvn spring-boot:run
 
----
+3.  The backend server will start on `http://localhost:8080`.
 
-##  Setup & Running the Project
+### 4. Populating Historical Data
 
-Each part of the project has its own detailed setup guide. You must start the backend first.
+For the backtesting and live simulation features to work, the database must be populated with historical market data.
 
-### 1. Backend Setup
-Navigate to the backend directory for instructions on setting up the database and running the server.
-[View Backend README](./Trading-Bot-Backend/README.md)
+1.  After the server is running, use a tool like Postman or your browser to make a GET request to the following endpoint. This will fetch the last year of daily data for Bitcoin and save it to the database. This only needs to be done once.
 
-> The backend runs at: `http://localhost:8080`
+    http://localhost:8080/api/test/setup-data/bitcoin/BTCUSDT/365
 
-### 2. Frontend Setup
-Once the backend is running, navigate to the frontend directory for instructions on installing dependencies and starting the UI.
-[View Frontend README](./Trading-Bot-Frontend/README.md)
 
-> The frontend runs at: `http://localhost:5173`
+## API Endpoints
 
----
+An overview of the main API endpoints.
 
-## Repositories
-
-*   🔗 Backend Repository: https://github.com/KristiyanHr/Trading-Bot-Backend
-*   🔗 Frontend Repository: https://github.com/KristiyanHr/Trading-Bot-Frontend
+*   `POST /api/bot/start-backtest/{symbol}`: Starts a new backtest simulation.
+*   `POST /api/bot/start-live/{symbol}`: Starts the live trading simulation.
+*   `POST /api/bot/stop-live`: Stops the live trading simulation.
+*   `POST /api/bot/reset`: Resets the account balance and clears all trades and holdings.
+*   `GET /api/account/{id}`: Retrieves the full status of an account (balance, holdings, P/L).
+*   `GET /api/account/{id}/trades?type={simulationType}`: Retrieves a list of trades for a specific simulation type (`BACKTEST` or `LIVE`).
+*   `GET /api/market-data/{symbol}`: Retrieves historical market data for a given date range.
