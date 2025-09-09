@@ -29,6 +29,7 @@ This project is organized as a multi-repository setup, which is standard for mod
 ---
 
 root/
+
 │
 ├── trading-bot-backend/   # The Backend service (Spring Boot, MySQL, REST API)
 │
@@ -42,13 +43,13 @@ Each part of the project has its own detailed setup guide. You must start the ba
 
 ### 1. Backend Setup
 Navigate to the backend directory for instructions on setting up the database and running the server.
-[View Backend README](./trading-bot-backend/README.md)
+[View Backend README](./Trading-Bot-Backend/README.md)
 
 > The backend runs at: `http://localhost:8080`
 
 ### 2. Frontend Setup
 Once the backend is running, navigate to the frontend directory for instructions on installing dependencies and starting the UI.
-[View Frontend README](./trading-bot-frontend/README.md)
+[View Frontend README](./Trading-Bot-Frontend/README.md)
 
 > The frontend runs at: `http://localhost:5173`
 
