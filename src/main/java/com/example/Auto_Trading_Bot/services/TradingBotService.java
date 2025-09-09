@@ -24,10 +24,10 @@ public class TradingBotService {
     private volatile boolean isLiveTradingRunning = false;
     private static final int RSI_PERIOD = 14;
 
-
+    //I`m gonna change the strategy parameters so we can see some trades in this demo!
     private static final int SHORT_SMA_PERIOD = 10;
     private static final int LONG_SMA_PERIOD = 25;
-
+    //We will wait for the bot to execute a trade when the SMA and RSI are good enough!
     @Autowired
     public TradingBotService(AccountDAO accountDAO, MarketDataDAO marketDataDAO, TradeDAO tradeDAO, PortfolioDAO portfolioDAO, CryptoAPIService cryptoAPIService) {
         this.accountDAO = accountDAO;
@@ -308,7 +308,7 @@ public class TradingBotService {
         this.isLiveTradingRunning = false;
     }
 
-    public BigDecimal calculateRSI(List<MarketData> data) {
+    protected BigDecimal calculateRSI(List<MarketData> data) {
 
         if (data == null || data.size() < RSI_PERIOD) {
             return new BigDecimal("50");
